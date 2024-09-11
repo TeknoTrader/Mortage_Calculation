@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 
-money = "$"
+money = "$" #,"€","¥","₽",
 
 # Translations dictionary
 translations = {
@@ -40,7 +40,8 @@ translations = {
         'mp': "Mortgage Payment Breakdown",
         'ma': "Mortgage analysis",
         'mam': "Mortgage amortization",
-        'tot': "Total Payment"
+        'tot': "Total Payment",
+        'warning': "If you are from a MOBILE DEVICE please ROTATE IT or switch the "representation" from "Interactive" to "Image"
     },
     'it': {
         'title': "Calcolatore Interattivo di Mutui",
@@ -71,7 +72,8 @@ translations = {
         'mp': "Ripartizione pagamento mutuo",
         'ma': "Analisi del mutuo",
         'mam': "Ammortamento del mutuo",
-        'tot': "Pagamento totale"
+        'tot': "Pagamento totale",
+        'warning': "Se fai accesso DA TELEFONO, ruota lo schermo o cambia la "rappresentazione" da "Interattiva" a "Immagine"
     },
     'ru': {
         'title': "Интерактивный Калькулятор Ипотеки",
@@ -102,7 +104,8 @@ translations = {
         'mp': "Разбивка платежей по ипотеке",
         'ma': "Ипотечный анализ",
         'mam': "Амортизация ипотеки",
-        'tot': "Общее количество страниц"
+        'tot': "Общее количество страниц",
+        'warning': "Если вы используете МОБИЛЬНОЕ УСТРОЙСТВО, ПОВЕРНИТЕ ЕГО или переключите «представление» с «Интерактивного» на «Изображение».
     }
 }
 
@@ -111,21 +114,7 @@ lang = st.sidebar.selectbox("Language / Lingua / Язык", ['en', 'it', 'ru'])
 t = translations[lang]
 
 def main():
-    # JavaScript to detect mobile devices and set a URL parameter
-    device_detector = """
-    <script>
-    function detectMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-    if (detectMobile()) {
-        window.location.href = window.location.href + (window.location.href.indexOf('?') > -1 ? '&' : '?') + 'is_mobile=true';
-    }
-    </script>
-    """
-    html(device_detector)
-
-    # Check if the user is on a mobile device using st.query_params
-    is_mobile = st.query_params.get('is_mobile') == 'true'
+    is_mobile = 'true'
 
     st.title(t['title'])
 
@@ -139,7 +128,7 @@ def main():
     # Set default representation based on device type
     default_representation = t['image'] if is_mobile else t['interactive']
     representation = st.radio(t['representation'], [t['interactive'], t['image']],
-                              index=[t['interactive'], t['image']].index(default_representation))
+                              index=[t['image'], t['interactive']].index(default_representation))
 
     if st.button(t['calculate']):
         payment, r, n = calculate_monthly_payment(P, annual_rate, years)
@@ -150,6 +139,7 @@ def main():
 
         if representation == t['interactive']:
             st.divider()
+            st.warning(t['warning'])
             st.write(f"# {t['payment_total']} {sum(interest_totals) + sum(principal_totals):.2f}")
             st.write(f"# {t['monthly_payment']}{payment:.2f}")
 
