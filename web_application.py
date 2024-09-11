@@ -50,7 +50,11 @@ def main():
             st.divider()
             st.write(f"# Payment total: ${sum(interest_totals) + sum(principal_totals):.2f}")
             st.write(f"# Monthly Payment: ${payment:.2f}")
+            st.divider()
 
+            # For mobile users
+            st.warning("If you are a mobile user, please ROTATE YOUR DEVICE or select \"Image\" instead of \"Interactive\" representation")
+            
             # Create and display interactive plots
             fig = create_interactive_plots(payments, interest_totals, principal_totals, int(n))
             st.plotly_chart(fig)
