@@ -88,6 +88,7 @@ def main():
         payments, interest_totals, principal_totals = calculate_amortization(P, payment, r, n)
 
         st.divider()
+        st.write(f"# Payment total: {money}{sum(interest_totals) + sum(principal_totals):.2f}")
         st.write(f"# Monthly Payment: {money}{payment:.2f}")
 
         # Create and display interactive plots
