@@ -41,7 +41,7 @@ translations = {
         'ma': "Mortgage analysis",
         'mam': "Mortgage amortization",
         'tot': "Total Payment",
-        'warning': "If you are from a MOBILE DEVICE please ROTATE IT or switch the \"representation\" from \"Interactive\" to \"Image\"
+        'warning': "If you are from a MOBILE DEVICE please ROTATE IT or switch the \"representation\" from \"Interactive\" to \"Image\""
     },
     'it': {
         'title': "Calcolatore Interattivo di Mutui",
@@ -73,7 +73,7 @@ translations = {
         'ma': "Analisi del mutuo",
         'mam': "Ammortamento del mutuo",
         'tot': "Pagamento totale",
-        'warning': "Se fai accesso DA TELEFONO, ruota lo schermo o cambia la \"rappresentazione\" da \"Interattiva\" a \"Immagine\"
+        'warning': "Se fai accesso DA TELEFONO, ruota lo schermo o cambia la \"rappresentazione\" da \"Interattiva\" a \"Immagine\""
     },
     'ru': {
         'title': "Интерактивный Калькулятор Ипотеки",
@@ -110,7 +110,7 @@ translations = {
 }
 
 # Language selection
-lang = st.sidebar.selectbox("Language / Lingua / Язык", ['en', 'it', 'ru'])
+lang = st.selectbox("Language / Lingua / Язык", ['en', 'it', 'ru'])
 t = translations[lang]
 
 def main():
