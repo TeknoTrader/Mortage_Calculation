@@ -9,6 +9,107 @@ import matplotlib.pyplot as plt
 
 money = "$"
 
+# Translations dictionary
+translations = {
+    'en': {
+        'title': "Interactive Mortgage Calculator",
+        'loan_amount': "Loan amount (" + money + ")",
+        'annual_rate': "Annual interest rate (%)",
+        'loan_term': "Loan term (years)",
+        'start_date': "Starting date",
+        'representation': "Representation method: ",
+        'interactive': "Interactive",
+        'image': "Image",
+        'calculate': "Calculate",
+        'payment_total': "Payment total: " + money,
+        'monthly_payment': "Monthly Payment: " + money,
+        'amortization_schedule': "Amortization Schedule (all in " + money + ")",
+        'date': "Date",
+        'payment_amount': "Payment Amount",
+        'principal': "Principal",
+        'interest': "Interest",
+        'remaining_balance': "Remaining Balance",
+        'payment_breakdown': "Payment Breakdown",
+        'balance_over_time': "Balance Over Time",
+        'mortgage_amortization': "Mortgage Amortization",
+        'total_interest': "Total Interest Paid",
+        'total_capital': "Total Principal Repaid",
+        'total_paid': "Total Amount Paid",
+        'amount': "Amount (" + money + ")",
+        'tp': "Total Payment Breakdown",
+        'mp': "Mortgage Payment Breakdown",
+        'ma': "Mortgage analysis",
+        'mam': "Mortgage amortization",
+        'tot': "Total Payment"
+    },
+    'it': {
+        'title': "Calcolatore Interattivo di Mutui",
+        'loan_amount': "Importo del prestito (" + money + ")",
+        'annual_rate': "Tasso di interesse annuale (%)",
+        'loan_term': "Durata del prestito (anni)",
+        'start_date': "Data di inizio",
+        'representation': "Metodo di rappresentazione: ",
+        'interactive': "Interattivo",
+        'image': "Immagine",
+        'calculate': "Calcola",
+        'payment_total': "Totale pagamenti: " + money,
+        'monthly_payment': "Rata mensile: " + money,
+        'amortization_schedule': "Piano di Ammortamento (tutto in " + money + ")",
+        'date': "Data",
+        'payment_amount': "Importo Rata",
+        'principal': "Capitale",
+        'interest': "Interessi",
+        'remaining_balance': "Saldo Rimanente",
+        'payment_breakdown': "Suddivisione dei Pagamenti",
+        'balance_over_time': "Saldo nel Tempo",
+        'mortgage_amortization': "Ammortamento del Mutuo",
+        'total_interest': "Totale Interessi Pagati",
+        'total_capital': "Totale Capitale Rimborsato",
+        'total_paid': "Totale Versato",
+        'amount': "Denaro (" + money + ")",
+        'tp': "Ripartizione totale pagamenti",
+        'mp': "Ripartizione pagamento mutuo",
+        'ma': "Analisi del mutuo",
+        'mam': "Ammortamento del mutuo",
+        'tot': "Pagamento totale"
+    },
+    'ru': {
+        'title': "Интерактивный Калькулятор Ипотеки",
+        'loan_amount': "Сумма кредита (" + money + ")",
+        'annual_rate': "Годовая процентная ставка (%)",
+        'loan_term': "Срок кредита (лет)",
+        'start_date': "Дата начала",
+        'representation': "Метод представления: ",
+        'interactive': "Интерактивный",
+        'image': "Изображение",
+        'calculate': "Рассчитать",
+        'payment_total': "Общая сумма выплат: " + money,
+        'monthly_payment': "Ежемесячный платеж: " + money,
+        'amortization_schedule': "График погашения (все в " + money + ")",
+        'date': "Дата",
+        'payment_amount': "Сумма платежа",
+        'principal': "Основной долг",
+        'interest': "Проценты",
+        'remaining_balance': "Остаток долга",
+        'payment_breakdown': "Разбивка платежей",
+        'balance_over_time': "Изменение баланса во времени",
+        'mortgage_amortization': "Амортизация ипотеки",
+        'total_interest': "общая сумма выплаченных процентов",
+        'total_capital': "общая сумма погашенной основной суммы долга",
+        'total_paid': "общая сумма выплачена",
+        'amount': "деньги (" + money + ")",
+        'tp': "Общая разбивка платежей",
+        'mp': "Разбивка платежей по ипотеке",
+        'ma': "Ипотечный анализ",
+        'mam': "Амортизация ипотеки",
+        'tot': "Общее количество страниц"
+    }
+}
+
+# Language selection
+lang = st.sidebar.selectbox("Language / Lingua / Язык", ['en', 'it', 'ru'])
+t = translations[lang]
+
 def main():
     # JavaScript to detect mobile devices and set a URL parameter
     device_detector = """
@@ -26,35 +127,32 @@ def main():
     # Check if the user is on a mobile device using st.query_params
     is_mobile = st.query_params.get('is_mobile') == 'true'
 
-    st.title("Interactive Mortgage Calculator")
+    st.title(t['title'])
 
-    # Input fields
-    P = st.number_input("Loan amount ($)", min_value=1000, value=200000, step=1000)
-    annual_rate = st.number_input("Annual interest rate (%)", min_value=0.1, max_value=20.0, value=5.0, step=0.1)
-    years = st.number_input("Loan term (years)", min_value=1, max_value=50, value=30, step=1)
-    start_date = st.date_input("Starting date", value=datetime.now().date())
+    # INPUT FIELDS
+
+    P = st.number_input(t['loan_amount'], min_value=1000, value=200000, step=1000)
+    annual_rate = st.number_input(t['annual_rate'], min_value=0.1, max_value=20.0, value=5.0, step=0.1)
+    years = st.number_input(t['loan_term'], min_value=1, max_value=50, value=30, step=1)
+    start_date = st.date_input(t['start_date'], value=datetime.now().date())
 
     # Set default representation based on device type
-    default_representation = "Image" if is_mobile else "Interactive"
-    representation = st.radio("Representation method: ", ["Interactive", "Image"],
-                              index=["Interactive", "Image"].index(default_representation))
+    default_representation = t['image'] if is_mobile else t['interactive']
+    representation = st.radio(t['representation'], [t['interactive'], t['image']],
+                              index=[t['interactive'], t['image']].index(default_representation))
 
-    if st.button("Calculate"):
+    if st.button(t['calculate']):
         payment, r, n = calculate_monthly_payment(P, annual_rate, years)
         payments, interest_totals, principal_totals = calculate_amortization(P, payment, r, n)
 
         # Generate dates for each payment
         dates = [start_date + timedelta(days=30 * i) for i in range(int(n))]
 
-        if representation == "Interactive":
+        if representation == t['interactive']:
             st.divider()
-            st.write(f"# Payment total: ${sum(interest_totals) + sum(principal_totals):.2f}")
-            st.write(f"# Monthly Payment: ${payment:.2f}")
-            st.divider()
+            st.write(f"# {t['payment_total']} {sum(interest_totals) + sum(principal_totals):.2f}")
+            st.write(f"# {t['monthly_payment']}{payment:.2f}")
 
-            # For mobile users
-            st.warning("If you are a mobile user, please ROTATE YOUR DEVICE or select \"Image\" instead of \"Interactive\" representation")
-            
             # Create and display interactive plots
             fig = create_interactive_plots(payments, interest_totals, principal_totals, int(n))
             st.plotly_chart(fig)
@@ -64,19 +162,19 @@ def main():
             st.plotly_chart(fig)
 
             # Display amortization schedule
-            st.subheader("Amortization Schedule (all in $)")
+            st.subheader(t['amortization_schedule'])
             df = pd.DataFrame({
-                "Date": dates,
-                "Payment Amount": payments,
-                "Principal": principal_totals,
-                "Interest": interest_totals,
-                "Remaining Balance": P - np.cumsum(principal_totals)
+                t['date']: dates,
+                t['payment_amount']: payments,
+                t['principal']: principal_totals,
+                t['interest']: interest_totals,
+                t['remaining_balance']: P - np.cumsum(principal_totals)
             })
             st.dataframe(df)
         else:
             st.divider()
-            st.write(f"# Payment total: ${sum(interest_totals) + sum(principal_totals):.2f}")
-            st.write(f"# Monthly Payment: ${payment:.2f}")
+            st.write(f"# {t['payment_total']}{sum(interest_totals) + sum(principal_totals):.2f}")
+            st.write(f"# {t['monthly_payment']}{payment:.2f}")
 
             # Image representation
             fig = plot_graphs(payments, interest_totals, principal_totals, int(n))
@@ -87,13 +185,13 @@ def main():
             st.plotly_chart(fig)
 
             # Display amortization schedule
-            st.subheader("Amortization Schedule (all in $)")
+            st.subheader(t['amortization_schedule'])
             df = pd.DataFrame({
-                "Date": dates,
-                "Payment Amount": payments,
-                "Principal": principal_totals,
-                "Interest": interest_totals,
-                "Remaining Balance": P - np.cumsum(principal_totals)
+                t['date']: dates,
+                t['payment_amount']: payments,
+                t['principal']: principal_totals,
+                t['interest']: interest_totals,
+                t['remaining_balance']: P - np.cumsum(principal_totals)
             })
             st.dataframe(df)
 
@@ -125,13 +223,13 @@ def plot_graphs(payments, interest_totals, principal_totals, n):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7))
 
     # Line graph
-    ax1.plot(months, np.cumsum(interest_totals), label='Total Interest Paid', color='red')
-    ax1.plot(months, np.cumsum(principal_totals), label='Total Principal Repaid', color='blue')
-    ax1.plot(months, np.cumsum(payments), label='Total Amount Paid', color='green', linestyle='--')
+    ax1.plot(months, np.cumsum(interest_totals), label=t['total_interest'], color='red')
+    ax1.plot(months, np.cumsum(principal_totals), label=t['total_capital'], color='blue')
+    ax1.plot(months, np.cumsum(payments), label=t['total_paid'], color='green', linestyle='--')
 
     ax1.set_xlabel('Payment Number')
-    ax1.set_ylabel(f'Amount ({money})')
-    ax1.set_title('Mortgage Payment Breakdown')
+    ax1.set_ylabel(t['amount'])
+    ax1.set_title(t['mp'])
     ax1.legend()
     ax1.grid(True)
 
@@ -139,14 +237,14 @@ def plot_graphs(payments, interest_totals, principal_totals, n):
     total_interest_paid = np.sum(interest_totals)
     total_principal_repaid = np.sum(principal_totals)
 
-    labels = [f'Interest: {round(sum(interest_totals), 2)}{money}',
-              f'Principal: {round(sum(principal_totals), 2)}{money}']
+    labels = [f'{t['interest']}: {round(sum(interest_totals), 2)}{money}',
+              f'{t['principal']}: {round(sum(principal_totals), 2)}{money}']
     sizes = [total_interest_paid, total_principal_repaid]
     colors = ['red', 'blue']
     explode = (0.1, 0)
 
     ax2.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%', startangle=140)
-    ax2.set_title(f'Total Payment: {round(sum(payments), 2)}{money}')
+    ax2.set_title(f'{t['tot']}: {round(sum(payments), 2)}{money}')
 
     plt.tight_layout()
     return fig
@@ -155,26 +253,26 @@ def create_interactive_plots(payments, interest_totals, principal_totals, n):
     months = np.arange(1, n + 1)
 
     # Create subplots
-    fig = make_subplots(rows=1, cols=2, subplot_titles=("Mortgage Payment Breakdown", "Total Payment Breakdown"),
+    fig = make_subplots(rows=1, cols=2, subplot_titles=(t['mp'], t['tp']),
                         specs=[[{"type": "xy"}, {"type": "domain"}]])
 
     # Line chart
     fig.add_trace(
-        go.Scatter(x=months, y=np.cumsum(interest_totals), name='Total Interest Paid', line=dict(color='red')),
+        go.Scatter(x=months, y=np.cumsum(interest_totals), name=t['total_interest'], line=dict(color='red')),
         row=1, col=1
     )
     fig.add_trace(
-        go.Scatter(x=months, y=np.cumsum(principal_totals), name='Total Principal Repaid', line=dict(color='blue')),
+        go.Scatter(x=months, y=np.cumsum(principal_totals), name=t['total_capital'], line=dict(color='blue')),
         row=1, col=1
     )
     fig.add_trace(
-        go.Scatter(x=months, y=np.cumsum(payments), name='Total Amount Paid', line=dict(color='green', dash='dash')),
+        go.Scatter(x=months, y=np.cumsum(payments), name=t['total_paid'], line=dict(color='green', dash='dash')),
         row=1, col=1
     )
 
     # Update line chart layout
     fig.update_xaxes(title_text="Payment Number", row=1, col=1)
-    fig.update_yaxes(title_text=f"Amount ({money})", row=1, col=1)
+    fig.update_yaxes(title_text=t['amount'], row=1, col=1)
 
     # Pie chart
     total_interest_paid = np.sum(interest_totals)
@@ -182,7 +280,7 @@ def create_interactive_plots(payments, interest_totals, principal_totals, n):
 
     fig.add_trace(
         go.Pie(
-            labels=['Interest', 'Principal'],
+            labels=[t['interest'], t['principal']],
             values=[total_interest_paid, total_principal_repaid],
             textinfo='label+percent',
             insidetextorientation='radial',
@@ -193,23 +291,23 @@ def create_interactive_plots(payments, interest_totals, principal_totals, n):
     )
 
     # Update layout
-    fig.update_layout(height=600, width=1000, title_text="Mortgage Analysis")
+    fig.update_layout(height=600, width=1000, title_text=t['ma'])
 
     return fig
 
 def create_interactive_plots2(dates, payments, interest_totals, principal_totals):
     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.1,
-                        subplot_titles=("Payment Breakdown", "Balance Over Time"))
+                        subplot_titles=(t['payment_breakdown'], t['balance_over_time']))
 
     # Payment breakdown
-    fig.add_trace(go.Scatter(x=dates, y=principal_totals, name="Principal", fill='tozeroy'), row=1, col=1)
-    fig.add_trace(go.Scatter(x=dates, y=interest_totals, name="Interest", fill='tonexty'), row=1, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=principal_totals, name=t['principal'], fill='tozeroy'), row=1, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=interest_totals, name=t['interest'], fill='tonexty'), row=1, col=1)
 
     # Balance over time
     balance = [sum(payments) - sum(principal_totals[:i + 1]) for i in range(len(payments))]
-    fig.add_trace(go.Scatter(x=dates, y=balance, name="Remaining Balance"), row=2, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=balance, name=t['remaining_balance']), row=2, col=1)
 
-    fig.update_layout(height=700, title_text="Mortgage Amortization")
+    fig.update_layout(height=700, title_text=t['mam'])
     return fig
 
 
