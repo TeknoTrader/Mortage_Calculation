@@ -11,7 +11,7 @@ money = "$" #,"€","¥","₽",
 
 # Translations dictionary
 translations = {
-    'en': {
+    'English': {
         'title': "Interactive Mortgage Calculator",
         'loan_amount': "Loan amount (" + money + ")",
         'annual_rate': "Annual interest rate (%)",
@@ -43,7 +43,7 @@ translations = {
         'tot': "Total Payment",
         'warning': "If you are from a MOBILE DEVICE please ROTATE IT or switch the \"representation\" from \"Interactive\" to \"Image\""
     },
-    'it': {
+    'Italiano': {
         'title': "Calcolatore Interattivo di Mutui",
         'loan_amount': "Importo del prestito (" + money + ")",
         'annual_rate': "Tasso di interesse annuale (%)",
@@ -75,7 +75,7 @@ translations = {
         'tot': "Pagamento totale",
         'warning': "Se fai accesso DA TELEFONO, ruota lo schermo o cambia la \"rappresentazione\" da \"Interattiva\" a \"Immagine\""
     },
-    'ru': {
+    'Русский': {
         'title': "Интерактивный Калькулятор Ипотеки",
         'loan_amount': "Сумма кредита (" + money + ")",
         'annual_rate': "Годовая процентная ставка (%)",
@@ -110,7 +110,7 @@ translations = {
 }
 
 # Language selection
-lang = st.selectbox("Language / Lingua / Язык", ['en', 'it', 'ru'])
+lang = st.selectbox("Language / Lingua / Язык", ['English', 'Italiano', 'Русский'])
 t = translations[lang]
 
 def main():
