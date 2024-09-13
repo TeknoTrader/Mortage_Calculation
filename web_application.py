@@ -127,7 +127,7 @@ def main():
 
     # Set default representation based on device type
     default_representation = t['image'] if is_mobile else t['interactive']
-    representation = st.radio(t['representation'], t['image'], [t['interactive']],
+    representation = st.radio(t['representation'], t['image'], t['interactive'],
                               index=[t['image'], t['interactive']].index(default_representation))
 
     if st.button(t['calculate']):
