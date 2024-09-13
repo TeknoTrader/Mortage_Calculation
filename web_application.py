@@ -182,15 +182,15 @@ def main():
             fig = create_interactive_plots(payments, interest_totals, principal_totals, int(n))
             st.plotly_chart(fig)
 
-            toggle = st.toggle(t['amm1'], value=false)
+            toggle = st.toggle(t['amm1'], value=False)
             # Create and display interactive plots2
-            if toggle == true:
+            if toggle == True:
                 fig = create_interactive_plots2(dates, payments, interest_totals, principal_totals)
                 st.plotly_chart(fig)
 
-            toggle1 = st.toggle(t['amm2'], value=false)
+            toggle1 = st.toggle(t['amm2'], value=False)
             # Display amortization schedule
-            if toggle1 == true:
+            if toggle1 == True:
                 st.subheader(t['amortization_schedule'])
                 df = pd.DataFrame({
                     t['date']: dates,
@@ -210,14 +210,14 @@ def main():
             st.pyplot(fig)
 
             # Create and display interactive plots2
-            toggle = st.toggle(t['amm1'], value=false)
-            if toggle == true:
+            toggle = st.toggle(t['amm1'], value=False)
+            if toggle == True:
                 fig = create_interactive_plots2(dates, payments, interest_totals, principal_totals)
                 st.plotly_chart(fig)
             
-            toggle1 = st.toggle(t['amm2'], value=false)
+            toggle1 = st.toggle(t['amm2'], value=False)
             # Display amortization schedule
-            if toggle1 == true:
+            if toggle1 == True:
                 st.subheader(t['amortization_schedule'])
                 df = pd.DataFrame({
                     t['date']: dates,
