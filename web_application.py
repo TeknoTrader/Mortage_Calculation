@@ -41,7 +41,16 @@ translations = {
         'ma': "Mortgage analysis",
         'mam': "Mortgage amortization",
         'tot': "Total Payment",
-        'warning': "If you are from a MOBILE DEVICE please ROTATE IT or switch the \"representation\" from \"Interactive\" to \"Image\""
+        'warning': "If you are from a MOBILE DEVICE please ROTATE IT or switch the \"representation\" from \"Interactive\" to \"Image\"",
+        'f1': "You know that you can save some money paying every X weeks, instead of every months?",
+        'f2': "This is because, in that way, you can pay more rates with the same monthly budget (",
+        'f3': " in this case), contrasting the interest of the bank",
+        'f4': "CASE 1: You can pay ",
+        'f5': "every week.",
+        'f6': "In this way, you would save ",
+        'f7': "The last payment would be in date: ",
+        'f4.1': "CASE 2: You can pay ",
+        'f5.1': "every 2 weeks."
     },
     'Italiano': {
         'title': "Calcolatore Interattivo di Mutui",
@@ -73,7 +82,16 @@ translations = {
         'ma': "Analisi del mutuo",
         'mam': "Ammortamento del mutuo",
         'tot': "Pagamento totale",
-        'warning': "Se fai accesso DA TELEFONO, ruota lo schermo o cambia la \"rappresentazione\" da \"Interattiva\" a \"Immagine\""
+        'warning': "Se fai accesso DA TELEFONO, ruota lo schermo o cambia la \"rappresentazione\" da \"Interattiva\" a \"Immagine\"",
+        'f1': "Sai che puoi risparmiare dei soldi pagando ogni X settimane invece che ogni mese?",
+        'f2': "Questo perché, in questo modo, puoi pagare più rate con lo stesso budget mensile (",
+        'f3': " in questo caso), contrastando gli interessi della banca",
+        'f4': "CASO 1: Puoi pagare ",
+        'f5': "ogni settimana.",
+        'f6': "In questo modo risparmieresti ",
+        'f7': "L'ultimo pagamento sarebbe alla data: ",
+        'f4.1': "CASO 2: Puoi pagare ",
+        'f5.1': "ogni 2 settimane."
     },
     'Русский': {
         'title': "Интерактивный Калькулятор Ипотеки",
@@ -105,7 +123,16 @@ translations = {
         'ma': "Ипотечный анализ",
         'mam': "Амортизация ипотеки",
         'tot': "Общее количество страниц",
-        'warning': "Если вы используете МОБИЛЬНОЕ УСТРОЙСТВО, ПОВЕРНИТЕ ЕГО или переключите «представление» с «Интерактивного» на «Изображение»."
+        'warning': "Если вы используете МОБИЛЬНОЕ УСТРОЙСТВО, ПОВЕРНИТЕ ЕГО или переключите «представление» с «Интерактивного» на «Изображение».",
+        'f1': "Вы знаете, что можете сэкономить деньги, платя каждые X недель вместо каждого месяца?",
+        'f2': "Это потому, что таким образом вы можете платить больше взносов при том же ежемесячном бюджете (",
+        'f3': " в этом случае), противодействуя процентам банка",
+        'f4': "СЛУЧАЙ 1: Вы можете платить ",
+        'f5': "каждую неделю.",
+        'f6': "Таким образом, вы сэкономите ",
+        'f7': "Последний платёж будет в дату: ",
+        'f4.1': "СЛУЧАЙ 2: Вы можете платить ",
+        'f5.1': "каждые 2 недели."
     }
 }
 
@@ -185,6 +212,64 @@ def main():
             })
             st.dataframe(df)
 
+        def calculate_loan_end(start_date, loan_amount, monthly_budget, weeks_per_payment, annual_interest_rate):
+            # Calculate the periodic interest rate
+            payments_per_year = 52 / weeks_per_payment
+            periodic_interest_rate = (1 + annual_interest_rate / 100) ** (1 / payments_per_year) - 1
+
+            # Amount to pay per period
+            payment_per_period = (monthly_budget * 12 / payments_per_year)
+
+            # Calculate the number of payments
+            num_payments = math.log(
+                payment_per_period / (payment_per_period - loan_amount * periodic_interest_rate)) / math.log(
+                1 + periodic_interest_rate)
+            num_payments = math.ceil(num_payments)
+
+            remaining_debt = loan_amount
+            total_paid = 0
+            current_date = start_date
+
+            for _ in range(num_payments):
+                interest = remaining_debt * periodic_interest_rate
+                principal_payment = payment_per_period - interest
+
+                if remaining_debt < payment_per_period:
+                    payment_per_period = remaining_debt + interest
+                    principal_payment = remaining_debt
+
+                remaining_debt -= principal_payment
+                total_paid += payment_per_period
+                current_date += timedelta(weeks=weeks_per_payment)
+
+                if remaining_debt <= 0:
+                    break
+
+            return current_date, total_paid, num_payments
+
+        def test_scenarios():
+            start_date = datetime.now().date()
+            loan_amount = P
+            monthly_budget = payment
+            annual_interest_rate = annual_rate
+
+            st.divider()
+            st.warning(f"### {t['f1']}")
+            st.write(f"### {t['f2']}{money}{monthly_budget}{t['f3']}")
+            for weeks in range(1, 3):
+                end_date, total_paid, num_payments = calculate_loan_end(
+                    start_date, loan_amount, monthly_budget, weeks, annual_interest_rate
+                )
+                if weeks == 1:
+                    st.warning(
+                        f"### {t['f4']}{money}{round(monthly_budget / 4, 2)} {t['f5']}\n### {t['f6']}{money}{370000 - total_paid:.2f}.\n### {t['f7']}{end_date}.")
+                    st.divider()
+                else:
+                    st.warning(
+                        f"### {t['f4.1']}{money}{round(monthly_budget / 2, 2)} {t['f5.1']}\n### {t['f6']}{money}{370000 - total_paid:.2f}.\n### {t['f7']}{end_date}.")
+
+        # Let's print the results
+        test_scenarios()
 
 def calculate_monthly_payment(P, annual_rate, years):
     r = annual_rate / 100 / 12  # monthly interest rate
