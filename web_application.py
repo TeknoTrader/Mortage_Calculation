@@ -215,63 +215,62 @@ def display_results():
         st.dataframe(df)
             
     def calculate_loan_end(start_date, loan_amount, monthly_budget, weeks_per_payment, annual_interest_rate):
-            # Calculate the periodic interest rate
-            payments_per_year = 52 / weeks_per_payment
-            periodic_interest_rate = (1 + annual_interest_rate / 100) ** (1 / payments_per_year) - 1
+        # Calculate the periodic interest rate
+        payments_per_year = 52 / weeks_per_payment
+        periodic_interest_rate = (1 + annual_interest_rate / 100) ** (1 / payments_per_year) - 1
+        # Amount to pay per period
+        payment_per_period = (monthly_budget * 12 / payments_per_year)
 
-            # Amount to pay per period
-            payment_per_period = (monthly_budget * 12 / payments_per_year)
+        # Calculate the number of payments
+        num_payments = math.log(
+            payment_per_period / (payment_per_period - loan_amount * periodic_interest_rate)) / math.log(
+            1 + periodic_interest_rate)
+        num_payments = math.ceil(num_payments)
 
-            # Calculate the number of payments
-            num_payments = math.log(
-                payment_per_period / (payment_per_period - loan_amount * periodic_interest_rate)) / math.log(
-                1 + periodic_interest_rate)
-            num_payments = math.ceil(num_payments)
+        remaining_debt = loan_amount
+        total_paid = 0
+        current_date = start_date
 
-            remaining_debt = loan_amount
-            total_paid = 0
-            current_date = start_date
+        for _ in range(num_payments):
+            interest = remaining_debt * periodic_interest_rate
+            principal_payment = payment_per_period - interest
 
-            for _ in range(num_payments):
-                interest = remaining_debt * periodic_interest_rate
-                principal_payment = payment_per_period - interest
+            if remaining_debt < payment_per_period:
+                payment_per_period = remaining_debt + interest
+                principal_payment = remaining_debt
 
-                if remaining_debt < payment_per_period:
-                    payment_per_period = remaining_debt + interest
-                    principal_payment = remaining_debt
+            remaining_debt -= principal_payment
+            total_paid += payment_per_period
+            current_date += timedelta(weeks=weeks_per_payment)
 
-                remaining_debt -= principal_payment
-                total_paid += payment_per_period
-                current_date += timedelta(weeks=weeks_per_payment)
+            if remaining_debt <= 0:
+                break
 
-                if remaining_debt <= 0:
-                    break
+        return current_date, total_paid, num_payments
 
-            return current_date, total_paid, num_payments
+    def test_scenarios():
+        start_date = datetime.now().date()            
+        loan_amount = P
+        monthly_budget = payment
+        annual_interest_rate = annual_rate
 
-        def test_scenarios():
-            start_date = datetime.now().date()
-            loan_amount = P
-            monthly_budget = payment
-            annual_interest_rate = annual_rate
+        st.divider()            
+        st.warning(f"### {t['f1']}")
+        st.write(f"### {t['f2']}{money}{monthly_budget}{t['f3']}")
+        for weeks in range(1, 3):
+            end_date, total_paid, num_payments = calculate_loan_end(
+                start_date, loan_amount, monthly_budget, weeks, annual_interest_rate
+            )
+            if weeks == 1:
+                st.warning(
+                    f"### {t['f4']}{money}{round(monthly_budget / 4, 2)} {t['f5']}\n### {t['f6']}{money}{370000 - total_paid:.2f}.\n### {t['f7']}{end_date}.")
+                st.divider()
+            else:
+                st.warning(
+                    f"### {t['f4.1']}{money}{round(monthly_budget / 2, 2)} {t['f5.1']}\n### {t['f6']}{money}{370000 - total_paid:.2f}.\n### {t['f7']}{end_date}.")
 
-            st.divider()
-            st.warning(f"### {t['f1']}")
-            st.write(f"### {t['f2']}{money}{monthly_budget}{t['f3']}")
-            for weeks in range(1, 3):
-                end_date, total_paid, num_payments = calculate_loan_end(
-                    start_date, loan_amount, monthly_budget, weeks, annual_interest_rate
-                )
-                if weeks == 1:
-                    st.warning(
-                        f"### {t['f4']}{money}{round(monthly_budget / 4, 2)} {t['f5']}\n### {t['f6']}{money}{370000 - total_paid:.2f}.\n### {t['f7']}{end_date}.")
-                    st.divider()
-                else:
-                    st.warning(
-                        f"### {t['f4.1']}{money}{round(monthly_budget / 2, 2)} {t['f5.1']}\n### {t['f6']}{money}{370000 - total_paid:.2f}.\n### {t['f7']}{end_date}.")
-
-        # Let's print the results
-        test_scenarios()
+    # Let's print the results
+    test_scenarios()
 
 def calculate_monthly_payment(P, annual_rate, years):
     r = annual_rate / 100 / 12  # monthly interest rate
