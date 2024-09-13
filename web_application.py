@@ -97,7 +97,7 @@ translations = {
         'balance_over_time': "Изменение баланса во времени",
         'mortgage_amortization': "Амортизация ипотеки",
         'total_interest': "сумма выплаченных процентов",
-        'total_capital': "сумма погашенной основной суммы долга",
+        'total_capital': "погашенная сумма долга",
         'total_paid': "общая сумма выплачена",
         'amount': "деньги (" + money + ")",
         'tp': "Общая разбивка платежей",
