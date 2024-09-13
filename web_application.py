@@ -256,7 +256,7 @@ def display_results():
 
         st.divider()            
         st.warning(f"### {t['f1']}")
-        st.write(f"{t['f2']}{money}{monthly_budget}{t['f3']}")
+        st.write(f"{t['f2']}{money}{round(monthly_budget,2)}{t['f3']}")
         for weeks in range(1, 3):
             end_date, total_paid, num_payments = calculate_loan_end(
                 start_date, loan_amount, monthly_budget, weeks, annual_interest_rate
