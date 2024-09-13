@@ -263,11 +263,11 @@ def display_results():
             )
             if weeks == 1:
                 st.warning(
-                    f"### {t['f4']}{money}{round(monthly_budget / 4, 2)} {t['f5']}\n### {t['f6']}{money}{sum(interest_totals) + sum(principal_totals) - total_paid:.2f}.\n### {t['f7']}{end_date}.")
+                    f"### {t['f4']}{money}{round(monthly_budget / 4, 2)} {t['f5']}\n### {t['f6']}{money}{sum(interest_totals) + sum(principal_totals) - total_paid:.2f}.") #\n### {t['f7']}{end_date}.")
                 st.divider()
             else:
                 st.warning(
-                    f"### {t['f4.1']}{money}{round(monthly_budget / 2, 2)} {t['f5.1']}\n### {t['f6']}{money}{sum(interest_totals) + sum(principal_totals) - total_paid:.2f}.\n### {t['f7']}{end_date}.")
+                    f"### {t['f4.1']}{money}{round(monthly_budget / 2, 2)} {t['f5.1']}\n### {t['f6']}{money}{sum(interest_totals) + sum(principal_totals) - total_paid:.2f}.") #\n### {t['f7']}{end_date}.")
 
     # Let's print the results
     test_scenarios()
