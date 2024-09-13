@@ -150,11 +150,9 @@ t = translations[lang]
 
 def main():
     is_mobile = 'true'
-
     st.title(t['title'])
 
     # INPUT FIELDS
-
     P = st.number_input(t['loan_amount'], min_value=1000, value=200000, step=1000)
     annual_rate = st.number_input(t['annual_rate'], min_value=0.1, max_value=20.0, value=5.0, step=0.1)
     years = st.number_input(t['loan_term'], min_value=1, max_value=50, value=30, step=1)
@@ -166,69 +164,57 @@ def main():
                               index=[t['image'], t['interactive']].index(default_representation))
 
     if st.button(t['calculate']):
-        payment, r, n = calculate_monthly_payment(P, annual_rate, years)
-        payments, interest_totals, principal_totals = calculate_amortization(P, payment, r, n)
+        st.session_state.calculated = True
+        st.session_state.P = P
+        st.session_state.annual_rate = annual_rate
+        st.session_state.years = years
+        st.session_state.start_date = start_date
+        st.session_state.representation = representation
 
-        # Generate dates for each payment
-        dates = [start_date + timedelta(days=30 * i) for i in range(int(n))]
+    if 'calculated' in st.session_state and st.session_state.calculated:
+        display_results()
 
-        if representation == t['interactive']:
-            st.divider()
-            st.warning(t['warning'])
-            st.write(f"# {t['payment_total']} {sum(interest_totals) + sum(principal_totals):.2f}")
-            st.write(f"# {t['monthly_payment']}{payment:.2f}")
+def display_results():
+    P = st.session_state.P
+    annual_rate = st.session_state.annual_rate
+    years = st.session_state.years
+    start_date = st.session_state.start_date
+    representation = st.session_state.representation
 
-            # Create and display interactive plots
-            fig = create_interactive_plots(payments, interest_totals, principal_totals, int(n))
-            st.plotly_chart(fig)
+    payment, r, n = calculate_monthly_payment(P, annual_rate, years)
+    payments, interest_totals, principal_totals = calculate_amortization(P, payment, r, n)
+    dates = [start_date + timedelta(days=30 * i) for i in range(int(n))]
 
-            toggle = st.toggle(t['amm1'], value=False)
-            # Create and display interactive plots2
-            if toggle == True:
-                fig = create_interactive_plots2(dates, payments, interest_totals, principal_totals)
-                st.plotly_chart(fig)
+    st.divider()
+    st.write(f"# {t['payment_total']} {sum(interest_totals) + sum(principal_totals):.2f}")
+    st.write(f"# {t['monthly_payment']}{payment:.2f}")
 
-            toggle1 = st.toggle(t['amm2'], value=False)
-            # Display amortization schedule
-            if toggle1 == True:
-                st.subheader(t['amortization_schedule'])
-                df = pd.DataFrame({
-                    t['date']: dates,
-                    t['payment_amount']: payments,
-                    t['principal']: principal_totals,
-                    t['interest']: interest_totals,
-                    t['remaining_balance']: P - np.cumsum(principal_totals)
-                })
-                st.dataframe(df)
-        else:
-            st.divider()
-            st.write(f"# {t['payment_total']}{sum(interest_totals) + sum(principal_totals):.2f}")
-            st.write(f"# {t['monthly_payment']}{payment:.2f}")
+    if representation == t['interactive']:
+        st.warning(t['warning'])
+        fig = create_interactive_plots(payments, interest_totals, principal_totals, int(n))
+        st.plotly_chart(fig)
+    else:
+        fig = plot_graphs(payments, interest_totals, principal_totals, int(n))
+        st.pyplot(fig)
+
+    toggle = st.toggle(t['amm1'], value=False)
+    if toggle:
+        fig = create_interactive_plots2(dates, payments, interest_totals, principal_totals)
+        st.plotly_chart(fig)
+
+    toggle1 = st.toggle(t['amm2'], value=False)
+    if toggle1:
+        st.subheader(t['amortization_schedule'])
+        df = pd.DataFrame({
+            t['date']: dates,
+            t['payment_amount']: payments,
+            t['principal']: principal_totals,
+            t['interest']: interest_totals,
+            t['remaining_balance']: P - np.cumsum(principal_totals)
+        })
+        st.dataframe(df)
             
-            # Image representation
-            fig = plot_graphs(payments, interest_totals, principal_totals, int(n))
-            st.pyplot(fig)
-
-            # Create and display interactive plots2
-            toggle = st.toggle(t['amm1'], value=False)
-            if toggle == True:
-                fig = create_interactive_plots2(dates, payments, interest_totals, principal_totals)
-                st.plotly_chart(fig)
-            
-            toggle1 = st.toggle(t['amm2'], value=False)
-            # Display amortization schedule
-            if toggle1 == True:
-                st.subheader(t['amortization_schedule'])
-                df = pd.DataFrame({
-                    t['date']: dates,
-                    t['payment_amount']: payments,
-                    t['principal']: principal_totals,
-                    t['interest']: interest_totals,
-                    t['remaining_balance']: P - np.cumsum(principal_totals)
-                })
-                st.dataframe(df)
-            
-        def calculate_loan_end(start_date, loan_amount, monthly_budget, weeks_per_payment, annual_interest_rate):
+    def calculate_loan_end(start_date, loan_amount, monthly_budget, weeks_per_payment, annual_interest_rate):
             # Calculate the periodic interest rate
             payments_per_year = 52 / weeks_per_payment
             periodic_interest_rate = (1 + annual_interest_rate / 100) ** (1 / payments_per_year) - 1
