@@ -313,8 +313,8 @@ def plot_graphs(payments, interest_totals, principal_totals, n):
     total_interest_paid = np.sum(interest_totals)
     total_principal_repaid = np.sum(principal_totals)
 
-    labels = [f'{t['interest']}: {round(sum(interest_totals), 2)}{money}',
-              f'{t['principal']}: {round(sum(principal_totals), 2)}{money}']
+    labels = [f'{t['interest']}: {money}{round(sum(interest_totals), 2)}',
+              f'{t['principal']}: {money}{round(sum(principal_totals), 2)}']
     sizes = [total_interest_paid, total_principal_repaid]
     colors = ['red', 'blue']
     explode = (0.1, 0)
