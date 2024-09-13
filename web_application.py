@@ -52,7 +52,9 @@ translations = {
         'f6': "In this way, you would save ",
         'f7': "The last payment would be in date: ",
         'f4.1': "CASE 2: You can pay ",
-        'f5.1': "every 2 weeks."
+        'f5.1': "every 2 weeks.",
+        'amm1': "Amortization Chart",
+        'amm2': "Amortization Plan"
     },
     'Italiano': {
         'title': "Calcolatore Interattivo di Mutui",
@@ -93,7 +95,9 @@ translations = {
         'f6': "In questo modo risparmieresti ",
         'f7': "L'ultimo pagamento sarebbe alla data: ",
         'f4.1': "CASO 2: Puoi pagare ",
-        'f5.1': "ogni 2 settimane."
+        'f5.1': "ogni 2 settimane.",
+        'amm1': "Grafico ammortamento",
+        'amm2': "Piano Ammortamento"
     },
     'Русский': {
         'title': "Интерактивный Калькулятор Ипотеки",
@@ -134,7 +138,9 @@ translations = {
         'f6': "Таким образом, вы сэкономите ",
         'f7': "Последний платёж будет в дату: ",
         'f4.1': "СЛУЧАЙ 2: Вы можете платить ",
-        'f5.1': "каждые 2 недели."
+        'f5.1': "каждые 2 недели.",
+        'amm1': "График амортизации",
+        'amm2': "План амортизации"
     }
 }
 
@@ -176,44 +182,52 @@ def main():
             fig = create_interactive_plots(payments, interest_totals, principal_totals, int(n))
             st.plotly_chart(fig)
 
+            toggle = st.toggle(t['amm1'], value=false)
             # Create and display interactive plots2
-            fig = create_interactive_plots2(dates, payments, interest_totals, principal_totals)
-            st.plotly_chart(fig)
+            if toggle == true:
+                fig = create_interactive_plots2(dates, payments, interest_totals, principal_totals)
+                st.plotly_chart(fig)
 
+            toggle1 = st.toggle(t['amm2'], value=false)
             # Display amortization schedule
-            st.subheader(t['amortization_schedule'])
-            df = pd.DataFrame({
-                t['date']: dates,
-                t['payment_amount']: payments,
-                t['principal']: principal_totals,
-                t['interest']: interest_totals,
-                t['remaining_balance']: P - np.cumsum(principal_totals)
-            })
-            st.dataframe(df)
+            if toggle1 == true:
+                st.subheader(t['amortization_schedule'])
+                df = pd.DataFrame({
+                    t['date']: dates,
+                    t['payment_amount']: payments,
+                    t['principal']: principal_totals,
+                    t['interest']: interest_totals,
+                    t['remaining_balance']: P - np.cumsum(principal_totals)
+                })
+                st.dataframe(df)
         else:
             st.divider()
             st.write(f"# {t['payment_total']}{sum(interest_totals) + sum(principal_totals):.2f}")
             st.write(f"# {t['monthly_payment']}{payment:.2f}")
-
+            
             # Image representation
             fig = plot_graphs(payments, interest_totals, principal_totals, int(n))
             st.pyplot(fig)
 
             # Create and display interactive plots2
-            fig = create_interactive_plots2(dates, payments, interest_totals, principal_totals)
-            st.plotly_chart(fig)
-
+            toggle = st.toggle(t['amm1'], value=false)
+            if toggle == true:
+                fig = create_interactive_plots2(dates, payments, interest_totals, principal_totals)
+                st.plotly_chart(fig)
+            
+            toggle1 = st.toggle(t['amm2'], value=false)
             # Display amortization schedule
-            st.subheader(t['amortization_schedule'])
-            df = pd.DataFrame({
-                t['date']: dates,
-                t['payment_amount']: payments,
-                t['principal']: principal_totals,
-                t['interest']: interest_totals,
-                t['remaining_balance']: P - np.cumsum(principal_totals)
-            })
-            st.dataframe(df)
-
+            if toggle1 == true:
+                st.subheader(t['amortization_schedule'])
+                df = pd.DataFrame({
+                    t['date']: dates,
+                    t['payment_amount']: payments,
+                    t['principal']: principal_totals,
+                    t['interest']: interest_totals,
+                    t['remaining_balance']: P - np.cumsum(principal_totals)
+                })
+                st.dataframe(df)
+            
         def calculate_loan_end(start_date, loan_amount, monthly_budget, weeks_per_payment, annual_interest_rate):
             # Calculate the periodic interest rate
             payments_per_year = 52 / weeks_per_payment
