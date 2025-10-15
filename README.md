@@ -178,7 +178,7 @@ Future enhancements planned:
 
 **Optimization Strategy:**
 - By paying €268.41 weekly (same monthly budget split into 4 weeks)
-- You save approximately €47,000 in interest
+- You save approximately €12,000 in interest
 - Loan is paid off several years earlier
 
 *This demonstrates the power of increased payment frequency!*
